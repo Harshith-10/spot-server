@@ -1,7 +1,7 @@
 # Multi-stage Docker build for Spot Server
 
 # Build stage
-FROM rust:1.87-slim as builder
+FROM rust:1.87-slim AS builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -37,7 +37,7 @@ RUN groupadd -r spot && useradd -r -g spot spot
 WORKDIR /app
 
 # Copy the binary from builder stage
-COPY --from=builder /app/target/release/spot-server-v2 ./spot-server
+COPY --from=builder /app/target/release/spot-server ./spot-server
 
 # Change ownership
 RUN chown -R spot:spot /app
