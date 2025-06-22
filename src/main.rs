@@ -31,7 +31,7 @@ use api::*;
     components(
         schemas(models::song::Song, models::album::Album, models::artist::Artist, 
                 models::playlist::Playlist, models::error::ApiError, models::images::Images,
-                models::images::ImageUrls, models::stream_urls::StreamUrls)
+                models::stream_urls::StreamUrls)
     ),
     tags(
         (name = "songs", description = "Song search and information endpoints"),
