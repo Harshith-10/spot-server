@@ -102,20 +102,20 @@ mod tests {
         let base_url = "https://stream-cdn.gaana.com/track/128.mp4";
         let variants = generate_quality_variants(base_url);
 
-        assert!(variants.urls.very_high_quality.is_some());
-        assert!(variants.urls.high_quality.is_some());
-        assert!(variants.urls.medium_quality.is_some());
-        assert!(variants.urls.low_quality.is_some());
+        assert!(variants.very_high_quality.is_some());
+        assert!(variants.high_quality.is_some());
+        assert!(variants.medium_quality.is_some());
+        assert!(variants.low_quality.is_some());
     }
 
     #[test]
     fn test_fallback_urls() {
         let fallback = generate_fallback_urls();
 
-        assert!(fallback.urls.very_high_quality.is_some());
-        assert!(fallback.urls.high_quality.is_some());
-        assert!(fallback.urls.medium_quality.is_some());
-        assert!(fallback.urls.low_quality.is_some());
+        assert!(fallback.very_high_quality.is_some());
+        assert!(fallback.high_quality.is_some());
+        assert!(fallback.medium_quality.is_some());
+        assert!(fallback.low_quality.is_some());
     }
 
     #[test]

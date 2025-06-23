@@ -13,8 +13,7 @@ pub struct Playlist {
     pub favorite_count: Option<i32>,
     pub playlist_url: String,
     pub images: Option<Images>,
-    pub total_tracks: Option<i32>,
-    pub tracks: Option<Vec<crate::models::song::Song>>,
+    pub tracks_url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

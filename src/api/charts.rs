@@ -1,6 +1,7 @@
 use axum::{extract::Query, http::StatusCode, response::Json};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use utoipa::IntoParams;
+use urlencoding::encode;
 
 use crate::api::base::BaseApi;
 use crate::models::{error::ApiError, playlist::*, images::Images};
@@ -8,14 +9,9 @@ use crate::utils::formatting;
 
 #[derive(Debug, Deserialize, IntoParams)]
 pub struct ChartsQuery {
+    #[serde(rename = "lang")]
+    language: Option<String>,
     limit: Option<usize>,
-}
-
-#[derive(Debug, Serialize)]
-#[serde(untagged)]
-pub enum ChartsResponse {
-    Playlists(Vec<Playlist>),
-    Error(ApiError),
 }
 
 /// Get current top charts (list of popular playlists)
@@ -31,12 +27,21 @@ pub enum ChartsResponse {
 )]
 pub async fn get_charts(
     Query(params): Query<ChartsQuery>,
-) -> Result<Json<ChartsResponse>, (StatusCode, Json<ApiError>)> {
+) -> Result<Json<Vec<Playlist>>, (StatusCode, Json<ApiError>)> {
     let api = BaseApi::new();
+    // Validate and normalize language
+    let language = match params.language {
+        Some(lang) => formatting::validate_language(&lang),
+        None => "Telugu".to_string(),
+    };
 
-    let url = "https://gaana.com/apiv2?page=0&type=miscTopCharts";
+    // Build charts URL with language filter
+    let url = format!(
+        "https://gaana.com/apiv2?page=0&type=miscTopCharts&language={}",
+        encode(&language)
+    );
 
-    match api.make_request(url).await {
+    match api.make_request(&url).await {
         Ok(response) => {
             let charts_response: Result<GaanaChartsResponse, _> =
                 serde_json::from_value(response.clone());
@@ -62,7 +67,7 @@ pub async fn get_charts(
                             ));
                         }
 
-                        Ok(Json(ChartsResponse::Playlists(playlist_list)))
+                        Ok(Json(playlist_list))
                     } else {
                         Err((
                             StatusCode::NOT_FOUND,
@@ -126,7 +131,6 @@ fn format_chart_entity(entity: &GaanaChartEntity) -> Option<Playlist> {
         favorite_count: formatting::extract_int(&entity.favorite_count),
         playlist_url: format!("https://gaana.com/playlist/{}", seokey),
         images,
-        total_tracks: None,
-        tracks: None,
+        tracks_url: format!("/playlists/info?seokey={}", seokey),
     })
 }

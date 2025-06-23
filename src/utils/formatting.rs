@@ -130,7 +130,7 @@ pub fn validate_language(lang: &str) -> String {
     if valid_languages.contains(&lang) {
         lang.to_string()
     } else {
-        "Hindi".to_string() // Default fallback
+        "Telugu".to_string() // Default fallback
     }
 }
 

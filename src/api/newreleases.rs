@@ -38,7 +38,7 @@ pub async fn get_new_releases(
     // Validate and normalize language
     let language = match params.language {
         Some(lang) => formatting::validate_language(&lang),
-        None => "Hindi".to_string(),
+        None => "Telugu".to_string(),
     };
 
     let url = format!(

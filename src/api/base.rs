@@ -308,8 +308,7 @@ impl BaseApi {
                 .clone()
                 .unwrap_or_else(|| format!("https://gaana.com/playlist/{}", seokey)),
             images,
-            total_tracks: formatting::extract_int(&playlist.total_tracks),
-            tracks,
+            tracks_url: format!("/playlists/info?seokey={}", seokey)
         })
     }
     /// Process album response from the API just like the Python version
